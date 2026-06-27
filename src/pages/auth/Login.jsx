@@ -2,10 +2,21 @@ import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../../context/auth.context'
 import { login } from '../../services/auth.config'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { 
+    Field, 
+    FieldLabel, 
+    FieldError, 
+    FieldGroup, 
+    FieldSet, 
+    FieldLegend, 
+    FieldDescription 
+} from "@/components/ui/field"
 
 
 const Login = () => {
-
+    
     const [loginInput, setLoginInput] = useState('')
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState(undefined)
@@ -23,10 +34,15 @@ const Login = () => {
         setPasswordError(false)
         setErrorMessage(undefined)
     }
-    const handlePassword = (e) => setPassword(e.target.value)
+    const handlePassword = (e) => {
+        setPassword(e.target.value)
+        setPasswordError(false)
+        setErrorMessage(undefined)
+    }
 
     const handleLoginSubmit = (e) => {
         e.preventDefault()
+
         const reqBody = { login: loginInput, password }
 
         login(reqBody)
@@ -56,42 +72,62 @@ const Login = () => {
 
 
     return (
-        <div>
+        <div className="flex min-h-[80vh] items-center justify-center">
+        <div className="w-full max-w-md px-10 md:px-0">
             <form onSubmit={handleLoginSubmit}>
-                <h3>Login</h3>
-                <label htmlFor='login'>Email</label>
-                <input 
-                    className={loginError ? 'border border-red-500' : 'border'}
-                    type='text'
-                    name='login'
-                    id='login'
-                    value={loginInput}
-                    onChange={handleLogin}
-                    autoComplete='off'
-                />
+                <FieldGroup>
+                    <FieldSet>
+                        <FieldLegend>Log In to your account</FieldLegend>
+                            <FieldDescription>
+                                If you don't have an account yet, sign up first.
+                            </FieldDescription>
+                            <FieldGroup>
+                            <Field>
+                            <FieldLabel htmlFor="login">
+                                Email or Username
+                            </FieldLabel>
+                            <Input 
+                                className={loginError ? 'border border-red-500' : 'border'}
+                                type='text'
+                                name='login'
+                                id='login'
+                                value={loginInput}
+                                onChange={handleLogin}
+                                autoComplete='off'
+                                aria-invalid={loginError}
+                            />
+                            {loginError && <FieldError>{errorMessage}</FieldError>}
+                            </Field>
+                            <Field>
+                            <FieldLabel htmlFor="password">
+                                Password
+                            </FieldLabel>
+                            <Input 
+                                className={passwordError ? 'border border-red-500' : 'border'}
+                                type='password'
+                                name='password'
+                                id='password'
+                                value={password}
+                                onChange={handlePassword}
+                                autoComplete='off'
+                                aria-invalid={passwordError}
+                            />
+                            {passwordError && <FieldError>{errorMessage}</FieldError>}
+                            </Field>
+                            </FieldGroup>
+                        </FieldSet>
+                        <Field>
+                            <Button type='submit'>
+                                Log In
+                            </Button>
+                        </Field>
+                    </FieldGroup>
 
-                <label htmlFor="password">Password</label>
-                <input 
-                    className={passwordError ? 'border border-red-500' : 'border'}
-                    type='password'
-                    name='password'
-                    id='password'
-                    value={password}
-                    onChange={handlePassword}
-                    autoComplete='off'
-                />
 
-                <button
-                    type='submit'
-                >
-                    Log In
-                </button>
             </form>
-
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-
             <Link to={"/signup"}> Sign Up</Link>
 
+        </div>
         </div>
     )
 }
