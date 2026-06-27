@@ -3,39 +3,35 @@ import { Routes, Route } from "react-router"
 
 // pages
 import HomePage from "./pages/HomePage.jsx"
-import Login from "./pages/auth/Login.jsx"
-import Signup from "./pages/auth/Signup.jsx"
+import LoggingPage from "./pages/auth/LoggingPage.jsx"
 import PrivatePage from "./pages/PrivatePage/index.jsx"
 
+// layouts
+import WithNavbar from "./layouts/WithNavbar"
+import WithoutNavbar from "./layouts/WithoutNavbar"
+
 // components
-import Navbar from "./components/Navbar"
 import OnlyPrivate from "./components/guards/OnlyPrivate"
 
 function App() {
   return (
-    <div>
-      <Navbar />
-
-      <br />
-      <hr />
-
-      <Routes>
+    <Routes>
+      <Route element={<WithNavbar />}>
         <Route path='/' element={<HomePage />} />
-        <Route path='/signup' element={<Signup />} />
-        <Route path='/login' element={<Login />} />
         <Route
           path='/private-page-example'
           element={
             <OnlyPrivate>
-              {" "}
-              <PrivatePage />{" "}
+              <PrivatePage />
             </OnlyPrivate>
           }
         />
+      </Route>
 
-        {/* error FE routes here... */}
-      </Routes>
-    </div>
+      <Route element={<WithoutNavbar />}>
+        <Route path='/logging' element={<LoggingPage />} />
+      </Route>
+    </Routes>
   )
 }
 

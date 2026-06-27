@@ -1,135 +1,118 @@
-import { useState, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../context/auth.context'
-import { login } from '../../services/auth.config'
+import { useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
+import { AuthContext } from "../../context/auth.context"
+import { login } from "../../services/auth.config"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { 
-    Field, 
-    FieldLabel, 
-    FieldError, 
-    FieldGroup, 
-    FieldSet, 
-    FieldLegend, 
-    FieldDescription 
+import {
+  Field,
+  FieldLabel,
+  FieldError,
+  FieldGroup,
+  FieldSet
 } from "@/components/ui/field"
 
-
 const Login = () => {
-    
-    const [loginInput, setLoginInput] = useState('')
-    const [password, setPassword] = useState('')
-    const [errorMessage, setErrorMessage] = useState(undefined)
-    const [loginError, setLoginError] = useState(false)
-    const [passwordError, setPasswordError] = useState(false)
+  const [loginInput, setLoginInput] = useState("")
+  const [password, setPassword] = useState("")
+  const [errorMessage, setErrorMessage] = useState(undefined)
+  const [loginError, setLoginError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
 
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
+  const { authenticateUser } = useContext(AuthContext)
 
-    const { authenticateUser } = useContext(AuthContext)
+  const handleLogin = (e) => {
+    setLoginInput(e.target.value)
+    setLoginError(false)
+    setPasswordError(false)
+    setErrorMessage(undefined)
+  }
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+    setPasswordError(false)
+    setErrorMessage(undefined)
+  }
 
-    const handleLogin = (e) => {
-        setLoginInput(e.target.value)
+  const handleLoginSubmit = (e) => {
+    e.preventDefault()
+
+    const reqBody = { login: loginInput, password }
+
+    login(reqBody)
+      .then((res) => {
+        console.log("JWT token", res.data.authToken)
+
+        localStorage.setItem("authToken", res.data.authToken)
+        authenticateUser()
+        navigate("/")
+      })
+      .catch((error) => {
+        const errorDescription = error.response.data.errorMessage
         setLoginError(false)
         setPasswordError(false)
-        setErrorMessage(undefined)
-    }
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
-        setPasswordError(false)
-        setErrorMessage(undefined)
-    }
 
-    const handleLoginSubmit = (e) => {
-        e.preventDefault()
+        if (
+          errorDescription.includes("password") ||
+          errorDescription.includes("Password")
+        ) {
+          setPasswordError(true)
+          setErrorMessage("Your password does not match username")
+        } else {
+          setLoginError(true)
+          setErrorMessage(
+            "It looks like we don't know you, how about signing up?",
+          )
+        }
+      })
+  }
 
-        const reqBody = { login: loginInput, password }
+  return (
 
-        login(reqBody)
-            .then((res) => {
-                console.log("JWT token", res.data.authToken)
+        <form onSubmit={handleLoginSubmit}>
+          <FieldGroup>
+            <FieldSet>
+              <FieldGroup>
+                <Field>
+                  <FieldLabel htmlFor='login'>Email or Username</FieldLabel>
+                  <Input
+                    className={loginError ? "border border-red-500" : "border"}
+                    type='text'
+                    name='login'
+                    id='login'
+                    value={loginInput}
+                    onChange={handleLogin}
+                    autoComplete='off'
+                    aria-invalid={loginError}
+                  />
+                  {loginError && <FieldError>{errorMessage}</FieldError>}
+                </Field>
+                <Field>
+                  <FieldLabel htmlFor='password'>Password</FieldLabel>
+                  <Input
+                    className={
+                      passwordError ? "border border-red-500" : "border"
+                    }
+                    type='password'
+                    name='password'
+                    id='password'
+                    value={password}
+                    onChange={handlePassword}
+                    autoComplete='off'
+                    aria-invalid={passwordError}
+                  />
+                  {passwordError && <FieldError>{errorMessage}</FieldError>}
+                </Field>
+              </FieldGroup>
+            </FieldSet>
+            <Field>
+              <Button type='submit'>Log In</Button>
+            </Field>
+          </FieldGroup>
+        </form>
 
-                localStorage.setItem("authToken", res.data.authToken)
-                authenticateUser()
-                navigate('/')
-
-            })
-            .catch((error) => {
-                const errorDescription = error.response.data.errorMessage
-                setLoginError(false)
-                setPasswordError(false)
-
-                if (errorDescription.includes('password') || errorDescription.includes('Password')) {
-                    setPasswordError(true)
-                    setErrorMessage('Your password does not match username.')
-                } else {
-                    setLoginError(true)
-                    setErrorMessage('This email or username does not exist. Please sign up first.')
-                }
-            })
-    }
-
-
-
-    return (
-        <div className="flex min-h-[80vh] items-center justify-center">
-        <div className="w-full max-w-md px-10 md:px-0">
-            <form onSubmit={handleLoginSubmit}>
-                <FieldGroup>
-                    <FieldSet>
-                        <FieldLegend>Log In to your account</FieldLegend>
-                            <FieldDescription>
-                                If you don't have an account yet, sign up first.
-                            </FieldDescription>
-                            <FieldGroup>
-                            <Field>
-                            <FieldLabel htmlFor="login">
-                                Email or Username
-                            </FieldLabel>
-                            <Input 
-                                className={loginError ? 'border border-red-500' : 'border'}
-                                type='text'
-                                name='login'
-                                id='login'
-                                value={loginInput}
-                                onChange={handleLogin}
-                                autoComplete='off'
-                                aria-invalid={loginError}
-                            />
-                            {loginError && <FieldError>{errorMessage}</FieldError>}
-                            </Field>
-                            <Field>
-                            <FieldLabel htmlFor="password">
-                                Password
-                            </FieldLabel>
-                            <Input 
-                                className={passwordError ? 'border border-red-500' : 'border'}
-                                type='password'
-                                name='password'
-                                id='password'
-                                value={password}
-                                onChange={handlePassword}
-                                autoComplete='off'
-                                aria-invalid={passwordError}
-                            />
-                            {passwordError && <FieldError>{errorMessage}</FieldError>}
-                            </Field>
-                            </FieldGroup>
-                        </FieldSet>
-                        <Field>
-                            <Button type='submit'>
-                                Log In
-                            </Button>
-                        </Field>
-                    </FieldGroup>
-
-
-            </form>
-            <Link to={"/signup"}> Sign Up</Link>
-
-        </div>
-        </div>
-    )
+  )
 }
 
 export default Login
