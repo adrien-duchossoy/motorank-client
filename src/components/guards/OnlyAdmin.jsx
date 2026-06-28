@@ -5,7 +5,7 @@ import { Navigate } from "react-router-dom"
 const OnlyAdmin = ({ children }) => {
   const { isLoggedIn, loggedUserRole } = useContext(AuthContext)
 
-  if (!isLoggedIn) return <Navigate to='/login' />
+  if (!isLoggedIn) return <Navigate to='/auth' />
   if (loggedUserRole !== "admin") return <Navigate to='/' />
 
   return children

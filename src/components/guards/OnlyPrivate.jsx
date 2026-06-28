@@ -7,7 +7,7 @@ const OnlyPrivate = ({children}) => {
     const { isLoggedIn } = useContext(AuthContext)
 
     if (isLoggedIn) return children
-    return <Navigate to="/login"/>
+    return <Navigate to="/auth"/>
 }
 
 

@@ -6,8 +6,8 @@ import { Navigate } from "react-router-dom"
 const OnlyVerified = ({children}) => {
   const { isLoggedIn, loggedUserRole } = useContext(AuthContext)
 
-  if (!isLoggedIn) return <Navigate to="/login" />
-  if (loggedUserRole !== "verified") return <Navigate to="/" />
+  if (!isLoggedIn) return <Navigate to="/auth" />
+  if (loggedUserRole !== "verified" && loggedUserRole !== "admin") return <Navigate to="/" />
 
   return children
 }

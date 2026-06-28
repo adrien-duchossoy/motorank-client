@@ -1,7 +1,8 @@
+import { Link } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { User02Icon } from "@hugeicons/core-free-icons"
 
-const ProfileHeader = ({ profile, reviewCount, action }) => {
+const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingPath }) => {
     const avatarImg = profile.profilePicture ? (
         <img src={profile.profilePicture} alt={profile.displayName} className="w-full h-full object-cover" />
     ) : (
@@ -23,9 +24,9 @@ const ProfileHeader = ({ profile, reviewCount, action }) => {
                 </div>
                 {action}
                 <div className="flex gap-8">
-                    <Stat label="followers" value={profile.followers?.length ?? 0} />
+                    <Stat label="followers" value={profile.followers?.length ?? 0} to={followersPath} />
                     <Stat label="reviews"   value={reviewCount} />
-                    <Stat label="following" value={profile.following?.length ?? 0} />
+                    <Stat label="following" value={profile.following?.length ?? 0} to={followingPath} />
                 </div>
                 {profile.description && (
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed text-left">{profile.description}</p>
@@ -43,9 +44,9 @@ const ProfileHeader = ({ profile, reviewCount, action }) => {
                 </div>
                 <div className="flex flex-col gap-3 ml-8">
                     <div className="flex gap-8">
-                        <Stat label="followers" value={profile.followers?.length ?? 0} />
+                        <Stat label="followers" value={profile.followers?.length ?? 0} to={followersPath} />
                         <Stat label="reviews"   value={reviewCount} />
-                        <Stat label="following" value={profile.following?.length ?? 0} />
+                        <Stat label="following" value={profile.following?.length ?? 0} to={followingPath} />
                     </div>
                     {profile.description && (
                         <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">{profile.description}</p>
@@ -57,13 +58,23 @@ const ProfileHeader = ({ profile, reviewCount, action }) => {
     )
 }
 
-const Stat = ({ label, value }) => (
-    <div>
-        <p className="text-base font-bold">
-            {value >= 1000 ? `${(value / 1000).toFixed(1)}K` : value}
-        </p>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">{label}</p>
-    </div>
-)
+const Stat = ({ label, value, to }) => {
+    const content = (
+        <>
+            <p className="text-base font-bold">
+                {value >= 1000 ? `${(value / 1000).toFixed(1)}K` : value}
+            </p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">{label}</p>
+        </>
+    )
+
+    if (to) return (
+        <Link to={to} className="hover:opacity-70 transition-opacity">
+            {content}
+        </Link>
+    )
+
+    return <div>{content}</div>
+}
 
 export default ProfileHeader

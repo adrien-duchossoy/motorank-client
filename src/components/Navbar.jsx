@@ -25,7 +25,7 @@ const Navbar = () => {
         ]
         : [
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
-            { label: 'Login',   icon: Login01Icon,  to: '/logging' },
+            { label: 'Login',   icon: Login01Icon,  to: '/auth' },
         ]
 
     return (

@@ -88,6 +88,8 @@ const MyProfilePage = () => {
             <ProfileHeader
                 profile={profile}
                 reviewCount={reviews.length}
+                followersPath="/me/followers"
+                followingPath="/me/following"
                 action={
                     <button
                         onClick={() => setProfileSheetOpen(true)}

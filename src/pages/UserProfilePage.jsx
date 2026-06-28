@@ -31,7 +31,7 @@ const UserProfilePage = () => {
         action(accountId)
             .then(() => {
                 setIsFollowing((prev) => !prev)
-                toast(isFollowing ? "Unfollowed" : `Following ${profile.displayName}`)
+                toast(isFollowing ? "Unfollowed" : `Following ${profile.displayName ?? profile.handle}`)
             })
             .catch(() => toast.error("Could not update follow status"))
     }
