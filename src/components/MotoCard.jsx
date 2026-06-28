@@ -9,7 +9,7 @@ const MotoCard = ({ moto, isFavorited, onToggleFavorite }) => {
     return (
         <div
             onClick={() => navigate(`/moto/${moto.slug}`)}
-            className="relative rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+            className="moto-card relative rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
         >
             <div className={`relative aspect-[4/3] ${moto.picture ? "" : "bg-zinc-100 dark:bg-zinc-900"}`}>
                 <MotoImage src={moto.picture} alt={`${moto.brandName} ${moto.modelName}`} />
