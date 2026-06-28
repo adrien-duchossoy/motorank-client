@@ -43,6 +43,7 @@ const ProfileSheet = ({ open, onClose }) => {
             .then((res) => {
                 const u = res.data
                 setProfile(u)
+                setStatus({})
                 setDisplayName(u.displayName ?? "")
                 setDescription(u.description ?? "")
                 setHandle(u.handle ?? "")
@@ -134,7 +135,6 @@ const ProfileSheet = ({ open, onClose }) => {
                 side="left"
                 className="w-full md:w-[480px] p-0 overflow-y-auto [&>button]:hidden"
             >
-                {/* Header */}
                 <div className="flex items-center gap-3 px-6 py-5 border-b border-zinc-200 dark:border-zinc-800">
                     <button
                         onClick={onClose}
@@ -146,7 +146,6 @@ const ProfileSheet = ({ open, onClose }) => {
                 </div>
 
                 <div className="px-6 py-8 space-y-8">
-                    {/* Avatar */}
                     <div className="flex justify-center">
                         <button onClick={handleAvatarClick} className="relative group">
                             <div className="w-24 h-24 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
@@ -177,7 +176,6 @@ const ProfileSheet = ({ open, onClose }) => {
                         />
                     </div>
 
-                    {/* General info */}
                     <Section title="General">
                         <form onSubmit={handleGeneralSubmit} className="space-y-3">
                             <Field label="Display name">
@@ -196,7 +194,6 @@ const ProfileSheet = ({ open, onClose }) => {
                         </form>
                     </Section>
 
-                    {/* Handle */}
                     <Section title="Username">
                         <form onSubmit={handleHandleSubmit} className="space-y-3">
                             <Field label="Handle">
@@ -209,7 +206,6 @@ const ProfileSheet = ({ open, onClose }) => {
                         </form>
                     </Section>
 
-                    {/* Email */}
                     <Section title="Email">
                         <form onSubmit={handleEmailSubmit} className="space-y-3">
                             <Field label="Email address">
@@ -219,7 +215,6 @@ const ProfileSheet = ({ open, onClose }) => {
                         </form>
                     </Section>
 
-                    {/* Password */}
                     <Section title="Password">
                         <form onSubmit={handlePasswordSubmit} className="space-y-3">
                             <Field label="Current password">

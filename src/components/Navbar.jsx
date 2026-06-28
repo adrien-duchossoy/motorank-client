@@ -11,7 +11,7 @@ import {
     Login01Icon,
 } from '@hugeicons/core-free-icons'
 
-const Navbar = ({ onOpenProfile }) => {
+const Navbar = () => {
     const { pathname } = useLocation()
     const { isLoggedIn } = useContext(AuthContext)
 
@@ -21,7 +21,7 @@ const Navbar = ({ onOpenProfile }) => {
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
             { label: 'Garage',  icon: GarageIcon,   to: '/garage' },
             { label: 'Saved',   icon: BookmarkIcon, to: '/saved' },
-            { label: 'Profile', icon: User02Icon,   to: null },
+            { label: 'Profile', icon: User02Icon,   to: '/me' },
         ]
         : [
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
@@ -38,24 +38,10 @@ const Navbar = ({ onOpenProfile }) => {
                             ? 'text-zinc-900 dark:text-white'
                             : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
                     }`
-                    const content = (
-                        <>
-                            <HugeiconsIcon icon={icon} size={22} strokeWidth={isActive ? 2 : 1.5} />
-                            <span className="text-[10px] font-medium tracking-wide">{label}</span>
-                        </>
-                    )
-
-                    if (to === null) {
-                        return (
-                            <button key={label} onClick={onOpenProfile} className={sharedClass}>
-                                {content}
-                            </button>
-                        )
-                    }
-
                     return (
                         <Link key={to} to={to} className={sharedClass}>
-                            {content}
+                            <HugeiconsIcon icon={icon} size={22} strokeWidth={isActive ? 2 : 1.5} />
+                            <span className="text-[10px] font-medium tracking-wide">{label}</span>
                         </Link>
                     )
                 })}
