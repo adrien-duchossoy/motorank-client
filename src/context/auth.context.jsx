@@ -1,73 +1,42 @@
 import { createContext, useEffect, useState } from "react";
-
 import { verifyLogin } from "../services/auth.config"
-
 
 const AuthContext = createContext()
 
-// Wrapper Component => the one that holds the global states and wraps the app
-const AuthWrapper = ({children}) => {
-
+const AuthWrapper = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loggedUserId, setLoggedUserId] = useState(null)
-
-  //* extra for admin roles
   const [loggedUserRole, setLoggedUserRole] = useState(null)
-
   const [isAuthenticating, setIsAuthenticating] = useState(true)
 
   async function authenticateUser() {
-
-    //... this function will verify the identity of the user and update the states accordingly
-
     const authToken = localStorage.getItem("authToken")
-    if(!authToken) {
+    if (!authToken) {
       setIsLoggedIn(false)
       setLoggedUserId(null)
-      setIsAuthenticating(false)
-
-      //* extra
       setLoggedUserRole(null)
-
+      setIsAuthenticating(false)
       return
     }
 
     try {
-      
-      // const response = await axios.get("http://localhost:5005/api/auth/verify", {
-      //   headers: {
-      //     authorization: `Bearer ${authToken}`
-      //   }
-      // })
-      const response = await verifyLogin() //! the token is passed in the service
-      console.log(response)
-
-      // if the request gets to this point it means the user token is correct
+      const response = await verifyLogin()
       setIsLoggedIn(true)
       setLoggedUserId(response.data._id)
-      setIsAuthenticating(false)
-
-      //* extra
       setLoggedUserRole(response.data.role)
-
-    } catch (error) {
-      console.log(error)
-      // if the request gets here it means the user token is not valid or not provided.
+      setIsAuthenticating(false)
+    } catch {
       setIsLoggedIn(false)
       setLoggedUserId(null)
-      setIsAuthenticating(false)
-
-      //* extra
       setLoggedUserRole(null)
+      setIsAuthenticating(false)
     }
-
   }
 
   const passedContext = { isLoggedIn, loggedUserId, authenticateUser, loggedUserRole }
 
-  useEffect(() => {
-    authenticateUser()
-  }, []) // component did mount for the whole app
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { authenticateUser() }, [])
 
   if (isAuthenticating) {
     return <h3>... authenticating user</h3>
@@ -80,7 +49,4 @@ const AuthWrapper = ({children}) => {
   )
 }
 
-export {
-  AuthContext,
-  AuthWrapper
-}
+export { AuthContext, AuthWrapper }

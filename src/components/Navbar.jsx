@@ -11,7 +11,7 @@ import {
     Login01Icon,
 } from '@hugeicons/core-free-icons'
 
-const Navbar = () => {
+const Navbar = ({ onOpenProfile }) => {
     const { pathname } = useLocation()
     const { isLoggedIn } = useContext(AuthContext)
 
@@ -21,7 +21,7 @@ const Navbar = () => {
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
             { label: 'Garage',  icon: GarageIcon,   to: '/garage' },
             { label: 'Saved',   icon: BookmarkIcon, to: '/saved' },
-            { label: 'Profile', icon: User02Icon,   to: '/profile' },
+            { label: 'Profile', icon: User02Icon,   to: null },
         ]
         : [
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
@@ -33,22 +33,29 @@ const Navbar = () => {
             <div className="flex items-center gap-1 px-4 py-3 rounded-2xl bg-zinc-100/90 dark:bg-zinc-950/80 backdrop-blur-md border border-black/10 dark:border-white/10 shadow-2xl">
                 {navItems.map(({ label, icon, to }) => {
                     const isActive = pathname === to
-                    return (
-                        <Link
-                            key={to}
-                            to={to}
-                            className={`flex flex-col items-center gap-1 px-4 py-1.5 rounded-xl transition-colors ${
-                                isActive
-                                    ? 'text-zinc-900 dark:text-white'
-                                    : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
-                            }`}
-                        >
-                            <HugeiconsIcon
-                                icon={icon}
-                                size={22}
-                                strokeWidth={isActive ? 2 : 1.5}
-                            />
+                    const sharedClass = `flex flex-col items-center gap-1 px-4 py-1.5 rounded-xl transition-colors ${
+                        isActive
+                            ? 'text-zinc-900 dark:text-white'
+                            : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
+                    }`
+                    const content = (
+                        <>
+                            <HugeiconsIcon icon={icon} size={22} strokeWidth={isActive ? 2 : 1.5} />
                             <span className="text-[10px] font-medium tracking-wide">{label}</span>
+                        </>
+                    )
+
+                    if (to === null) {
+                        return (
+                            <button key={label} onClick={onOpenProfile} className={sharedClass}>
+                                {content}
+                            </button>
+                        )
+                    }
+
+                    return (
+                        <Link key={to} to={to} className={sharedClass}>
+                            {content}
                         </Link>
                     )
                 })}

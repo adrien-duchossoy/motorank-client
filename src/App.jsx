@@ -3,8 +3,9 @@ import { Routes, Route } from "react-router"
 
 // pages
 import HomePage from "./pages/HomePage.jsx"
-import LoggingPage from "./pages/auth/LoggingPage.jsx"
-import PrivatePage from "./pages/PrivatePage/index.jsx"
+import MotoDetailPage from "./pages/MotoDetailPage.jsx"
+import AuthPage from "./pages/auth/AuthPage.jsx"
+import PrivatePage from "./pages/PrivatePage.jsx"
 
 // layouts
 import WithNavbar from "./layouts/WithNavbar"
@@ -18,6 +19,7 @@ function App() {
     <Routes>
       <Route element={<WithNavbar />}>
         <Route path='/' element={<HomePage />} />
+        <Route path='/moto/:slug' element={<MotoDetailPage />} />
         <Route
           path='/private-page-example'
           element={
@@ -29,7 +31,7 @@ function App() {
       </Route>
 
       <Route element={<WithoutNavbar />}>
-        <Route path='/logging' element={<LoggingPage />} />
+        <Route path='/logging' element={<AuthPage />} />
       </Route>
     </Routes>
   )

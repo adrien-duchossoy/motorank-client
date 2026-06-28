@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Login from "./Login"
 import Signup from "./Signup"
 
-const LoggingPage = () => {
+const AuthPage = () => {
   return (
       <div className='flex min-h-[80vh] w-full items-center justify-center'>
         <Tabs className='w-full max-w-md px-10 md:px-0' defaultValue='login'>
@@ -21,4 +21,4 @@ const LoggingPage = () => {
   )
 }
 
-export default LoggingPage
+export default AuthPage
