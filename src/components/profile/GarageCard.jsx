@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Delete01Icon } from "@hugeicons/core-free-icons"
+import MotoImage from "../moto/MotoImage"
 
 const GarageCard = ({ entry, onDelete }) => {
     const navigate = useNavigate()
@@ -13,14 +14,8 @@ const GarageCard = ({ entry, onDelete }) => {
             onClick={() => navigate(`/moto/${moto.slug}`)}
             className="relative rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
         >
-            <div className="aspect-[4/3] bg-zinc-100 dark:bg-zinc-900">
-                {moto.picture && (
-                    <img
-                        src={moto.picture}
-                        alt={`${moto.brandName} ${moto.modelName}`}
-                        className="w-full h-full object-cover"
-                    />
-                )}
+            <div className={`relative aspect-[4/3] ${moto.picture ? "" : "bg-zinc-100 dark:bg-zinc-900"}`}>
+                <MotoImage src={moto.picture} alt={`${moto.brandName} ${moto.modelName}`} />
             </div>
             <div className="p-3">
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">{moto.brandName}</p>

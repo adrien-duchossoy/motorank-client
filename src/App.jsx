@@ -1,5 +1,5 @@
 import "./App.css"
-import { Routes, Route } from "react-router"
+import { Routes, Route, Navigate } from "react-router"
 
 import HomePage from "./pages/HomePage.jsx"
 import MotoDetailPage from "./pages/MotoDetailPage.jsx"
@@ -9,6 +9,7 @@ import MyProfilePage from "./pages/MyProfilePage.jsx"
 import UserProfilePage from "./pages/UserProfilePage.jsx"
 import FollowListPage from "./pages/FollowListPage.jsx"
 import GaragePage from "./pages/GaragePage.jsx"
+import SavedPage from "./pages/SavedPage.jsx"
 import WithNavbar from "./layouts/WithNavbar"
 import WithoutNavbar from "./layouts/WithoutNavbar"
 import OnlyPrivate from "./components/guards/OnlyPrivate"
@@ -17,7 +18,8 @@ function App() {
   return (
     <Routes>
       <Route element={<WithNavbar />}>
-        <Route path='/' element={<HomePage />} />
+        <Route path='/' element={<Navigate to="/explore" replace />} />
+        <Route path='/explore' element={<HomePage />} />
         <Route path='/moto/:slug' element={<MotoDetailPage />} />
         <Route path='/me' element={<OnlyPrivate><MyProfilePage /></OnlyPrivate>} />
         <Route path='/me/followers' element={<OnlyPrivate><FollowListPage type="followers" /></OnlyPrivate>} />
@@ -25,6 +27,7 @@ function App() {
         <Route path='/user/:accountId' element={<UserProfilePage />} />
         <Route path='/user/:accountId/garage' element={<GaragePage />} />
         <Route path='/garage' element={<OnlyPrivate><GaragePage /></OnlyPrivate>} />
+        <Route path='/saved' element={<OnlyPrivate><SavedPage /></OnlyPrivate>} />
         <Route
           path='/private-page-example'
           element={

@@ -23,7 +23,7 @@ const AuthWrapper = ({ children }) => {
       const response = await verifyLogin()
       setIsLoggedIn(true)
       setLoggedUserId(response.data._id)
-      setLoggedUserRole(response.data.role)
+      setLoggedUserRole(response.data.status)
       setIsAuthenticating(false)
     } catch {
       setIsLoggedIn(false)

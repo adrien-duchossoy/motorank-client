@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react"
 import { useParams } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { QuillWrite01Icon } from "@hugeicons/core-free-icons"
+import { QuillWrite01Icon, PencilEdit01Icon } from "@hugeicons/core-free-icons"
 import { toast } from "sonner"
 import { getMotoInfo } from "../services/moto.config"
 import { allModelReviews, deleteMyReview } from "../services/review.config"
@@ -14,14 +14,17 @@ import MotoSpecs from "../components/moto/MotoSpecs"
 import ReviewList from "../components/reviews/ReviewList"
 import EditReviewModal from "../components/reviews/EditReviewModal"
 import WriteReviewModal from "../components/reviews/WriteReviewModal"
+import EditMotoModal from "../components/moto/EditMotoModal"
 
 const MotoDetailPage = () => {
     const { slug } = useParams()
-    const { loggedUserId, isLoggedIn } = useContext(AuthContext)
+    const { loggedUserId, isLoggedIn, loggedUserRole } = useContext(AuthContext)
+    const canEdit = loggedUserRole === "verified" || loggedUserRole === "admin"
     const [moto, setMoto] = useState(null)
     const [reviews, setReviews] = useState([])
     const [editingReview, setEditingReview] = useState(null)
     const [writeModalOpen, setWriteModalOpen] = useState(false)
+    const [editMotoOpen, setEditMotoOpen] = useState(false)
     const [isFavorited, setIsFavorited] = useState(false)
 
     useEffect(() => {
@@ -112,18 +115,36 @@ const MotoDetailPage = () => {
                 onUpdated={handleUpdatedReview}
             />
 
+            <EditMotoModal
+                moto={moto}
+                open={editMotoOpen}
+                onClose={() => setEditMotoOpen(false)}
+                onUpdated={(updated) => setMoto(updated)}
+            />
+
             <div className="px-4 md:px-16 lg:px-32 pt-6 pb-12 space-y-8">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
                     <MotoHeader moto={moto} />
                     <div className="flex flex-col items-end gap-3">
                         <MotoSpecs moto={moto} />
                         {isLoggedIn && (
-                            <button
-                                onClick={handleAddToGarage}
-                                className="hidden md:block text-sm font-medium px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors"
-                            >
-                                + Add to garage
-                            </button>
+                            <div className="hidden md:flex gap-2">
+                                {canEdit && (
+                                    <button
+                                        onClick={() => setEditMotoOpen(true)}
+                                        className="flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors"
+                                    >
+                                        <HugeiconsIcon icon={PencilEdit01Icon} size={15} />
+                                        Edit
+                                    </button>
+                                )}
+                                <button
+                                    onClick={handleAddToGarage}
+                                    className="text-sm font-medium px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:border-zinc-500 dark:hover:border-zinc-500 transition-colors"
+                                >
+                                    + Add to garage
+                                </button>
+                            </div>
                         )}
                     </div>
                 </div>
@@ -136,6 +157,15 @@ const MotoDetailPage = () => {
                         >
                             + Add to garage
                         </button>
+                        {canEdit && (
+                            <button
+                                onClick={() => setEditMotoOpen(true)}
+                                className="flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 hover:border-zinc-500 transition-colors"
+                            >
+                                <HugeiconsIcon icon={PencilEdit01Icon} size={15} />
+                                Edit
+                            </button>
+                        )}
                         <button
                             onClick={handleWriteReview}
                             className="flex-1 flex items-center justify-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 transition-colors"

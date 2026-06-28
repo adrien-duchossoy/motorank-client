@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { FavouriteIcon, StarIcon } from "@hugeicons/core-free-icons"
+import MotoImage from "./moto/MotoImage"
 
 const MotoCard = ({ moto, isFavorited, onToggleFavorite }) => {
     const navigate = useNavigate()
@@ -10,21 +11,15 @@ const MotoCard = ({ moto, isFavorited, onToggleFavorite }) => {
             onClick={() => navigate(`/moto/${moto.slug}`)}
             className="relative rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
         >
-            <div className="relative aspect-[4/3] bg-zinc-100 dark:bg-zinc-900">
-                {moto.picture && (
-                    <img
-                        src={moto.picture}
-                        alt={`${moto.brandName} ${moto.modelName}`}
-                        className="w-full h-full object-cover"
-                    />
-                )}
-                <span className="absolute top-2 left-2 text-xs font-medium px-2 py-0.5 rounded bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm">
+            <div className={`relative aspect-[4/3] ${moto.picture ? "" : "bg-zinc-100 dark:bg-zinc-900"}`}>
+                <MotoImage src={moto.picture} alt={`${moto.brandName} ${moto.modelName}`} />
+                <span className="absolute top-2 left-2 z-10 text-xs font-medium px-2 py-0.5 rounded bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm">
                     {moto.type}
                 </span>
                 {onToggleFavorite && (
                     <button
                         onClick={(e) => { e.stopPropagation(); onToggleFavorite(moto._id, moto.modelName) }}
-                        className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm transition-colors"
+                        className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm transition-colors"
                     >
                         <HugeiconsIcon
                             icon={FavouriteIcon}
