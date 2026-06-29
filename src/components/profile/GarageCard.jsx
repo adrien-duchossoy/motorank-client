@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import useTilt from "../../hooks/useTilt"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Delete01Icon } from "@hugeicons/core-free-icons"
 import MotoImage from "../moto/MotoImage"
@@ -7,11 +8,16 @@ const GarageCard = ({ entry, onDelete }) => {
     const navigate = useNavigate()
     const moto = entry.motorcycleId
 
+    const { ref, onMouseMove, onMouseLeave } = useTilt()
+
     if (!moto || typeof moto !== "object") return null
 
     return (
         <div
             onClick={() => navigate(`/moto/${moto.slug}`)}
+            ref={ref}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
             className="relative rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
         >
             <div className={`relative aspect-[4/3] ${moto.picture ? "" : "bg-zinc-100 dark:bg-zinc-900"}`}>

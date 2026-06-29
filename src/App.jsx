@@ -13,12 +13,13 @@ import SavedPage from "./pages/SavedPage.jsx"
 import WithNavbar from "./layouts/WithNavbar"
 import WithoutNavbar from "./layouts/WithoutNavbar"
 import OnlyPrivate from "./components/guards/OnlyPrivate"
+import FeedPage from './pages/FeedPage'
 
 function App() {
   return (
     <Routes>
       <Route element={<WithNavbar />}>
-        <Route path='/' element={<Navigate to="/explore" replace />} />
+        <Route path='/' element={<FeedPage />} />
         <Route path='/explore' element={<HomePage />} />
         <Route path='/moto/:slug' element={<MotoDetailPage />} />
         <Route path='/me' element={<OnlyPrivate><MyProfilePage /></OnlyPrivate>} />

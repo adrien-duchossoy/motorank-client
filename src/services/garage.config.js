@@ -4,6 +4,10 @@ export const myGarage = () => {
     return service.get("/garage")
 }
 
+export const getGarageEntry = (garageEntryId) => {
+    return service.get(`/garage/${garageEntryId}`)
+}
+
 export const addToMyGarage = (body) => {
     return service.post("/garage", body)
 }

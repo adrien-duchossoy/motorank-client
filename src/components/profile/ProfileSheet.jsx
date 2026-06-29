@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useContext } from "react"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ArrowLeft01Icon, Camera01Icon, User02Icon } from "@hugeicons/core-free-icons"
+import { ArrowLeft01Icon, Camera01Icon, User02Icon, Logout01Icon } from "@hugeicons/core-free-icons"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -15,8 +15,12 @@ import {
 } from "../../services/user.config"
 import { uploadImage } from '@/services/upload.config'
 import { Skeleton } from '../ui/skeleton'
+import { AuthContext } from "@/context/auth.context"
+import { useNavigate } from "react-router-dom"
 
 const ProfileSheet = ({ open, onClose }) => {
+    const { authenticateUser } = useContext(AuthContext)
+    const navigate = useNavigate()
     const fileInputRef = useRef(null)
 
     const [profile, setProfile] = useState(null)
@@ -105,6 +109,13 @@ const ProfileSheet = ({ open, onClose }) => {
                 setPasswordErrorMessage("Incorrect current password")
                 setSection("password", { loading: false, success: false })
             })
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("authToken")
+        authenticateUser()
+        onClose()
+        navigate("/")
     }
 
     const handleAvatarClick = () => {
@@ -250,6 +261,15 @@ const ProfileSheet = ({ open, onClose }) => {
                             <SectionFooter status={status.password} />
                         </form>
                     </Section>
+                    <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 text-sm text-red-500 hover:text-red-600 transition-colors"
+                        >
+                            <HugeiconsIcon icon={Logout01Icon} size={18} />
+                            Log out
+                        </button>
+                    </div>
                 </div>
             </SheetContent>
         </Sheet>

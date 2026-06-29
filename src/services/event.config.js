@@ -7,3 +7,7 @@ export const myFeed = () => {
 export const myActivity = () => {
     return service.get("/events/me")
 }
+
+export const toggleLike = (eventId) => {
+    return service.post(`/events/${eventId}/like`)
+}

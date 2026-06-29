@@ -1,13 +1,15 @@
+import { Link } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon, Edit01Icon, Delete01Icon } from "@hugeicons/core-free-icons"
 
 const ReviewCard = ({ review, loggedUserId, onEdit, onDelete }) => {
+    console.log(review.media) 
     const isOwn = review.userId._id === loggedUserId
 
     return (
         <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
             <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-3">
+                <Link to={`/user/${review.userId._id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                     {review.userId.profilePicture ? (
                         <img
                             src={review.userId.profilePicture}
@@ -23,7 +25,7 @@ const ReviewCard = ({ review, loggedUserId, onEdit, onDelete }) => {
                         <p className="font-medium text-sm">{review.userId.displayName}</p>
                         <p className="text-xs text-zinc-500 dark:text-zinc-400">@{review.userId.handle}</p>
                     </div>
-                </div>
+                </Link>
                 <div className="flex items-center gap-0.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                         <HugeiconsIcon
