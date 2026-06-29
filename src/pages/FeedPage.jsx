@@ -24,9 +24,8 @@ const FeedPage = () => {
             ) : (
                 <ul className="space-y-4">
                     {events.map((event) => (
-                        <li key={event.id} className="border rounded-xl p-4">
+                        <li key={event._id}>
                             <EventCard key={event._id} event={event} />
-                            <pre>{JSON.stringify(event, null, 2)}</pre>
                         </li>
                     ))}
                 </ul>

@@ -1,23 +1,13 @@
 import { useNavigate } from "react-router-dom"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { User02Icon } from "@hugeicons/core-free-icons"
+import ProfilePic from '@/components/ui/ProfilePic'
 
 const UserRow = ({ user, isFollowing, onFollow }) => {
     const navigate = useNavigate()
 
     return (
         <div className="flex items-center gap-4 py-4">
-            <button
-                onClick={() => navigate(`/user/${user._id}`)}
-                className="w-12 h-12 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden shrink-0"
-            >
-                {user.profilePicture ? (
-                    <img src={user.profilePicture} alt={user.displayName} className="w-full h-full object-cover" />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-400">
-                        <HugeiconsIcon icon={User02Icon} size={20} />
-                    </div>
-                )}
+            <button onClick={() => navigate(`/user/${user._id}`)}>
+                <ProfilePic user={user} size="lg" />
             </button>
 
             <button onClick={() => navigate(`/user/${user._id}`)} className="flex-1 min-w-0 text-left">

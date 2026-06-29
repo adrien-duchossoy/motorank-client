@@ -6,6 +6,7 @@ import NewFollowEvent from './NewFollowEvent'
 import GarageAddEvent from './GarageAddEvent'
 import EventLikes from './EventLikes'
 import EventComments from './EventComments'
+import ProfilePic from '@/components/ui/ProfilePic'
 
 const timeAgo = (date) => {
     const seconds = Math.floor((Date.now() - new Date(date)) / 1000)
@@ -28,6 +29,7 @@ const EventCard = ({ event }) => {
     return (
         <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 space-y-3">
             <div className="flex items-center gap-2">
+                <ProfilePic user={event.actorId} size="sm" />
                 <span className="font-medium">{event.actorId?.handle}</span>
                 <span className="text-xs text-zinc-400">{timeAgo(event.createdAt)} ago</span>
             </div>

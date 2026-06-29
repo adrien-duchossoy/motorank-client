@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon, Edit01Icon, Delete01Icon } from "@hugeicons/core-free-icons"
+import ProfilePic from '@/components/ui/ProfilePic'
 
 const ReviewCard = ({ review, loggedUserId, onEdit, onDelete }) => {
     console.log(review.media) 
@@ -10,17 +11,7 @@ const ReviewCard = ({ review, loggedUserId, onEdit, onDelete }) => {
         <div className="border border-zinc-200 dark:border-zinc-800 rounded-xl p-4">
             <div className="flex items-start justify-between mb-3">
                 <Link to={`/user/${review.userId._id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                    {review.userId.profilePicture ? (
-                        <img
-                            src={review.userId.profilePicture}
-                            alt={review.userId.displayName}
-                            className="w-10 h-10 rounded-full object-cover shrink-0"
-                        />
-                    ) : (
-                        <div className="w-10 h-10 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-zinc-500 font-semibold shrink-0">
-                            {review.userId.displayName?.[0]?.toUpperCase()}
-                        </div>
-                    )}
+                    <ProfilePic user={review.userId} size="md" />
                     <div>
                         <p className="font-medium text-sm">{review.userId.displayName}</p>
                         <p className="text-xs text-zinc-500 dark:text-zinc-400">@{review.userId.handle}</p>

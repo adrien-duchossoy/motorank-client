@@ -1,26 +1,18 @@
 import { Link } from "react-router-dom"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { User02Icon } from "@hugeicons/core-free-icons"
+import ProfilePic from '@/components/ui/ProfilePic'
 
 const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingPath }) => {
-    const avatarImg = profile.profilePicture ? (
-        <img src={profile.profilePicture} alt={profile.displayName} className="w-full h-full object-cover" />
-    ) : (
-        <div className="w-full h-full flex items-center justify-center text-zinc-400">
-            <HugeiconsIcon icon={User02Icon} size={36} />
-        </div>
-    )
-
     return (
         <div className="bg-zinc-100 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 px-4 md:px-16 lg:px-32 py-8">
 
             <div className="flex flex-col items-center text-center gap-4 md:hidden">
-                <div className="w-24 h-24 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
-                    {avatarImg}
-                </div>
+                <ProfilePic user={profile} size="xl" />
                 <div>
                     <h1 className="text-xl font-bold">{profile.displayName}</h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">@{profile.handle}</p>
+                    {profile.status === 'verified' && (
+                        <p className="text-xs font-medium text-[var(--primary)] mt-0.5">verified</p>
+                    )}
                 </div>
                 {action}
                 <div className="flex gap-8">
@@ -34,12 +26,13 @@ const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingP
             </div>
 
             <div className="hidden md:flex items-start gap-6">
-                <div className="w-24 h-24 rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden shrink-0">
-                    {avatarImg}
-                </div>
+                <ProfilePic user={profile} size="xl" />
                 <div className="shrink-0">
                     <h1 className="text-2xl font-bold">{profile.displayName}</h1>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">@{profile.handle}</p>
+                    {profile.status === 'verified' && (
+                        <p className="text-xs font-medium text-[var(--primary)] mt-0.5">verified</p>
+                    )}
                     {action && <div className="mt-3">{action}</div>}
                 </div>
                 <div className="flex flex-col gap-3 ml-8">
