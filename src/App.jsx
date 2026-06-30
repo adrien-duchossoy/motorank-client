@@ -12,7 +12,9 @@ import SavedPage from "./pages/SavedPage.jsx"
 import WithNavbar from "./layouts/WithNavbar"
 import WithoutNavbar from "./layouts/WithoutNavbar"
 import OnlyPrivate from "./components/guards/OnlyPrivate"
+import OnlyVerified from "./components/guards/OnlyVerified"
 import FeedPage from './pages/FeedPage'
+import NewBikePage from './pages/NewBikePage'
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
         <Route path='/user/:accountId/garage' element={<GaragePage />} />
         <Route path='/garage' element={<OnlyPrivate><GaragePage /></OnlyPrivate>} />
         <Route path='/saved' element={<OnlyPrivate><SavedPage /></OnlyPrivate>} />
+        <Route path='/new-bike' element={<OnlyVerified><NewBikePage /></OnlyVerified>} />
       </Route>
 
       <Route element={<WithoutNavbar />}>

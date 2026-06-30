@@ -1,16 +1,18 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Camera01Icon, SparklesIcon } from "@hugeicons/core-free-icons"
-import { updateMoto, suggestMotoImage } from "../../services/moto.admin.config"
-import { getBrands, getTypes } from "../../services/moto.config"
-import { uploadImage } from "../../services/upload.config"
+import { createMoto, fillMotoWithAI, suggestMotoImage } from "../services/moto.admin.config"
+import { getBrands, getTypes } from "../services/moto.config"
+import { uploadImage } from "../services/upload.config"
+import NewBikePageSkeleton from "./skeleton/NewBikePageSkeleton"
 
-const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
+const NewBikePage = () => {
+    const navigate = useNavigate()
     const fileInputRef = useRef(null)
 
     const [brandName, setBrandName] = useState("")
@@ -24,46 +26,29 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
     const [weightKg, setWeightKg] = useState("")
     const [picture, setPicture] = useState("")
     const [uploading, setUploading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [aiLoading, setAiLoading] = useState(false)
     const [imageLoading, setImageLoading] = useState(false)
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [brands, setBrands] = useState([])
     const [types, setTypes] = useState([])
 
     useEffect(() => {
-        Promise.all([getBrands(), getTypes()]).then(([b, t]) => {
-            setBrands(b.data)
-            setTypes(t.data)
-        })
+        Promise.all([getBrands(), getTypes()])
+            .then(([b, t]) => {
+                setBrands(b.data)
+                setTypes(t.data)
+            })
+            .catch(() => toast.error("Could not load options"))
+            .finally(() => setIsLoading(false))
     }, [])
-
-    useEffect(() => {
-        if (!moto) return
-        setBrandName(moto.brandName ?? "")
-        setModelName(moto.modelName ?? "")
-        setProductionYear(moto.productionYear ? String(moto.productionYear) : "")
-        setType(moto.type ?? "")
-        setDisplacement(moto.displacement ?? "")
-        setHorsepower(moto.horsepower ?? "")
-        setCylinders(moto.cylinders ?? "")
-        setTorqueNm(moto.torqueNm ?? "")
-        setWeightKg(moto.weightKg ?? "")
-        setPicture(moto.picture ?? "")
-        setError(null)
-    }, [moto, open])
 
     const currentYear = new Date().getFullYear()
     const years = Array.from({ length: currentYear - 1949 }, (_, i) => currentYear + 1 - i)
 
-    const canSuggestImage = brandName.trim().length > 0 && modelName.trim().length > 0 && productionYear.trim().length > 0
+    const canAiFill = brandName.trim().length > 0 && modelName.trim().length > 0 && productionYear.trim().length > 0
 
-    const handleImageSuggest = () => {
-        setImageLoading(true)
-        suggestMotoImage({ brandName, modelName, productionYear })
-            .then((res) => setPicture(res.data.imageUrl))
-            .catch(() => toast.error("Could not find an image"))
-            .finally(() => setImageLoading(false))
-    }
+    if (isLoading) return <NewBikePageSkeleton />
 
     const handleFileSelect = (e) => {
         const file = e.target.files?.[0]
@@ -77,11 +62,36 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
             .finally(() => setUploading(false))
     }
 
+    const handleImageSuggest = () => {
+        setImageLoading(true)
+        suggestMotoImage({ brandName, modelName, productionYear })
+            .then((res) => setPicture(res.data.imageUrl))
+            .catch(() => toast.error("Could not find an image"))
+            .finally(() => setImageLoading(false))
+    }
+
+    const handleAiFill = () => {
+        setAiLoading(true)
+        fillMotoWithAI({ brandName, modelName, productionYear: Number(productionYear) })
+            .then((res) => {
+                const data = res.data
+                if (data.type) setType(data.type)
+                if (data.displacement) setDisplacement(String(data.displacement))
+                if (data.horsepower) setHorsepower(String(data.horsepower))
+                if (data.cylinders) setCylinders(String(data.cylinders))
+                if (data.torqueNm) setTorqueNm(String(data.torqueNm))
+                if (data.weightKg) setWeightKg(String(data.weightKg))
+                toast("Fields filled with AI")
+            })
+            .catch(() => toast.error("Could not get AI suggestions"))
+            .finally(() => setAiLoading(false))
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
-        setLoading(true)
+        setIsLoading(true)
         setError(null)
-        updateMoto(moto._id, {
+        createMoto({
             brandName,
             modelName,
             productionYear: productionYear !== "" ? Number(productionYear) : undefined,
@@ -94,39 +104,36 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
             picture,
         })
             .then((res) => {
-                onUpdated(res.data)
-                onClose()
-                toast("Moto updated")
+                toast("Moto added!")
+                navigate(`/moto/${res.data.slug}`)
             })
             .catch((err) => {
-                setError(err.response?.data?.errorMessage ?? "Could not update moto")
+                setError(err.response?.data?.errorMessage ?? "Could not create moto")
             })
-            .finally(() => setLoading(false))
+            .finally(() => setIsLoading(false))
     }
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle>Edit moto</DialogTitle>
-                </DialogHeader>
+        <div className="min-h-screen pb-32 pt-10 px-4">
+            <div className="max-w-lg mx-auto">
+                <h1 className="text-2xl font-bold mb-6">Add a new bike</h1>
 
-                <form onSubmit={handleSubmit} className="space-y-5 pt-2">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="flex flex-col items-center gap-2">
                         <button type="button" onClick={() => fileInputRef.current?.click()} className="relative group">
-                            <div className="w-32 h-24 rounded-lg bg-zinc-100 dark:bg-zinc-900 overflow-hidden border border-zinc-200 dark:border-zinc-800">
+                            <div className="w-40 h-28 rounded-xl bg-zinc-100 dark:bg-zinc-900 overflow-hidden border border-zinc-200 dark:border-zinc-800">
                                 {picture ? (
                                     <img src={picture} alt="Moto" className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-zinc-400 text-xs">No photo</div>
                                 )}
                                 {(uploading || imageLoading) && (
-                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-lg">
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-xl">
                                         <span className="text-white text-xs">{imageLoading ? "Searching..." : "Uploading..."}</span>
                                     </div>
                                 )}
                             </div>
-                            <div className="absolute bottom-1.5 right-1.5 p-1.5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900">
+                            <div className="absolute bottom-2 right-2 p-1.5 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900">
                                 <HugeiconsIcon icon={Camera01Icon} size={13} />
                             </div>
                         </button>
@@ -135,7 +142,7 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            disabled={!canSuggestImage || imageLoading}
+                            disabled={!canAiFill || imageLoading}
                             onClick={handleImageSuggest}
                             className="flex items-center gap-1.5 text-xs text-zinc-500"
                         >
@@ -170,6 +177,20 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
                         </Field>
                     </div>
 
+                    <div className="flex justify-end">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={!canAiFill || aiLoading}
+                            onClick={handleAiFill}
+                            className="flex items-center gap-1.5 text-xs"
+                        >
+                            <HugeiconsIcon icon={SparklesIcon} size={14} />
+                            {aiLoading ? "Filling..." : "Fill with AI"}
+                        </Button>
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                         <Field label="Type">
                             <Select value={type} onValueChange={setType}>
@@ -200,15 +221,15 @@ const EditMotoModal = ({ moto, open, onClose, onUpdated }) => {
 
                     {error && <p className="text-sm text-red-500">{error}</p>}
 
-                    <div className="flex justify-end gap-3">
-                        <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                        <Button type="submit" disabled={loading || uploading}>
-                            {loading ? "Saving..." : "Save changes"}
+                    <div className="flex justify-end gap-3 pt-2">
+                        <Button type="button" variant="outline" onClick={() => navigate(-1)}>Cancel</Button>
+                        <Button type="submit" disabled={isLoading || uploading}>
+                            {isLoading ? "Adding..." : "Add bike"}
                         </Button>
                     </div>
                 </form>
-            </DialogContent>
-        </Dialog>
+            </div>
+        </div>
     )
 }
 
@@ -219,4 +240,4 @@ const Field = ({ label, children }) => (
     </div>
 )
 
-export default EditMotoModal
+export default NewBikePage

@@ -7,3 +7,6 @@ export const listAllMoto = (params = {}) => {
 export const getMotoInfo = (slug) => {
     return service.get(`/motos/${slug}`)
 }
+
+export const getBrands = () => service.get("/motos/brands")
+export const getTypes = () => service.get("/motos/types")

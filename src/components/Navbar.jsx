@@ -9,21 +9,27 @@ import {
     BookmarkIcon,
     User02Icon,
     Login01Icon,
+    Motorbike01Icon,
 } from '@hugeicons/core-free-icons'
 
 const Navbar = () => {
     const { pathname } = useLocation()
-    const { isLoggedIn } = useContext(AuthContext)
+    const { isLoggedIn, loggedUserRole } = useContext(AuthContext)
     const [hoveredIndex, setHoveredIndex] = useState(null)
 
+    const canAddBike = loggedUserRole === "verified" || loggedUserRole === "admin"
+
+    const loggedInItems = [
+        { label: 'Feed',    icon: Home01Icon,     to: '/' },
+        { label: 'Explore', icon: Search01Icon,   to: '/explore' },
+        ...(canAddBike ? [{ label: 'New Bike', icon: Motorbike01Icon, to: '/new-bike' }] : []),
+        { label: 'Garage',  icon: GarageIcon,     to: '/garage' },
+        { label: 'Saved',   icon: BookmarkIcon,   to: '/saved' },
+        { label: 'Profile', icon: User02Icon,     to: '/me' },
+    ]
+
     const navItems = isLoggedIn
-        ? [
-            { label: 'Feed',    icon: Home01Icon,   to: '/' },
-            { label: 'Explore', icon: Search01Icon, to: '/explore' },
-            { label: 'Garage',  icon: GarageIcon,   to: '/garage' },
-            { label: 'Saved',   icon: BookmarkIcon, to: '/saved' },
-            { label: 'Profile', icon: User02Icon,   to: '/me' },
-        ]
+        ? loggedInItems
         : [
             { label: 'Explore', icon: Search01Icon, to: '/explore' },
             { label: 'Login',   icon: Login01Icon,  to: '/auth' },
