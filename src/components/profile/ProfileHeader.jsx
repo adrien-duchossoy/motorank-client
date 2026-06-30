@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import ProfilePic from '@/components/ui/ProfilePic'
+import { Progress } from '@/components/ui/progress'
 
 const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingPath }) => {
     return (
@@ -20,6 +21,12 @@ const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingP
                     <Stat label="reviews"   value={reviewCount} />
                     <Stat label="following" value={profile.following?.length ?? 0} to={followingPath} />
                 </div>
+                {profile.status !== 'verified' && reviewCount < 5 && (
+                    <div className="w-full space-y-1">
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">{reviewCount}/5 reviews to Verified</p>
+                        <Progress value={(reviewCount / 5) * 100} className="h-1.5" />
+                    </div>
+                )}
                 {profile.description && (
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed text-left">{profile.description}</p>
                 )}
@@ -41,6 +48,12 @@ const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingP
                         <Stat label="reviews"   value={reviewCount} />
                         <Stat label="following" value={profile.following?.length ?? 0} to={followingPath} />
                     </div>
+                    {profile.status !== 'verified' && reviewCount < 5 && (
+                        <div className="w-48 space-y-1">
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{reviewCount}/5 reviews to Verified</p>
+                            <Progress value={(reviewCount / 5) * 100} className="h-1.5" />
+                        </div>
+                    )}
                     {profile.description && (
                         <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">{profile.description}</p>
                     )}

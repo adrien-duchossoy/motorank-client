@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { verifyLogin } from "../services/auth.config"
+import { myProfile } from "../services/user.config"
 
 const AuthContext = createContext()
 
@@ -21,9 +22,10 @@ const AuthWrapper = ({ children }) => {
 
     try {
       const response = await verifyLogin()
+      const profile = await myProfile()
       setIsLoggedIn(true)
       setLoggedUserId(response.data._id)
-      setLoggedUserRole(response.data.status)
+      setLoggedUserRole(profile.data.status)
       setIsAuthenticating(false)
     } catch {
       setIsLoggedIn(false)

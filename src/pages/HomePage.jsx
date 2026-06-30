@@ -6,6 +6,7 @@ import { AuthContext } from "../context/auth.context"
 import MotoSearch from "../components/MotoSearch"
 import MotoList from "../components/MotoList"
 import HomePageSkeleton from './skeleton/HomePageSkeleton'
+import motorankLogo from '../../public/motorank-logo.png'
 
 const HomePage = () => {
     const { isLoggedIn } = useContext(AuthContext)
@@ -64,8 +65,8 @@ const HomePage = () => {
 
     return (
         <div className="px-4 md:px-16 lg:px-32 pt-6">
-            <div className="h-14 mb-4 flex items-center">
-                {/* logo ici */}
+            <div className="h-14 mb-4 flex items-center justify-center">
+                <img src={motorankLogo} alt="Motorank" className="h-full w-auto object-contain" />
             </div>
 
             <MotoSearch

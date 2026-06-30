@@ -1,6 +1,8 @@
-import { useState, useRef } from "react"
-import { createReview } from "../../services/review.config"
+import { useState, useRef, useContext } from "react"
+import { createReview, myReviews } from "../../services/review.config"
+import { AuthContext } from "../../context/auth.context"
 import { uploadImage } from "../../services/upload.config"
+import VerifiedCelebration from "@/components/ui/VerifiedCelebration"
 import {
   Dialog,
   DialogContent,
@@ -12,6 +14,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon } from "@hugeicons/core-free-icons"
 
 const WriteReviewModal = ({ motorcycleId, open, onClose, onCreated }) => {
+  const { authenticateUser } = useContext(AuthContext)
   const [rating, setRating] = useState(5)
   const [hoverRating, setHoverRating] = useState(null)
   const [comment, setComment] = useState("")
@@ -19,6 +22,7 @@ const WriteReviewModal = ({ motorcycleId, open, onClose, onCreated }) => {
   const [error, setError] = useState(null)
   const [media, setMedia] = useState([])
   const [uploading, setUploading] = useState(false)
+  const [showCelebration, setShowCelebration] = useState(false)
 
   const fileInputRef = useRef(null)
 
@@ -28,7 +32,12 @@ const WriteReviewModal = ({ motorcycleId, open, onClose, onCreated }) => {
     setError(null)
 
     createReview({ motorcycleId, rating, comment, media })
-      .then(() => {
+      .then(() => myReviews())
+      .then((res) => {
+        if (res.data.length === 5) {
+          setShowCelebration(true)
+          authenticateUser()
+        }
         onCreated()
         onClose()
         setRating(5)
@@ -56,6 +65,8 @@ const WriteReviewModal = ({ motorcycleId, open, onClose, onCreated }) => {
   const displayRating = hoverRating ?? rating
 
   return (
+    <>
+    <VerifiedCelebration open={showCelebration} onClose={() => setShowCelebration(false)} />
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className='sm:max-w-md'>
         <DialogHeader>
@@ -141,6 +152,7 @@ const WriteReviewModal = ({ motorcycleId, open, onClose, onCreated }) => {
         </form>
       </DialogContent>
     </Dialog>
+    </>
   )
 }
 
