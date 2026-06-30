@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react"
 import { myFeed } from "../services/event.config"
-
 import EventCard from "../components/event/EventCard"
+import FeedPageSkeleton from "./skeleton/FeedPageSkeleton"
 
 const FeedPage = () => {
     const [events, setEvents] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         myFeed()
-            .then((res) => {
-                res.data.forEach( e => console.log(e.type, e))
-                console.log(res.data)
-                setEvents(res.data)
-            })
+            .then((res) => setEvents(res.data))
             .catch(console.error)
+            .finally(() => setIsLoading(false))
     }, [])
+
+    if (isLoading) return <FeedPageSkeleton />
 
     return(
         <div className="px-4 md:px-26 lg:px-32 pt-6">

@@ -6,6 +6,7 @@ import { AuthContext } from "../context/auth.context"
 import ProfileHeader from "../components/profile/ProfileHeader"
 import GarageCard from "../components/profile/GarageCard"
 import ProfileReviewCard from "../components/profile/ProfileReviewCard"
+import ProfilePageSkeleton from "./skeleton/ProfilePageSkeleton"
 
 const UserProfilePage = () => {
     const { accountId } = useParams()
@@ -14,16 +15,21 @@ const UserProfilePage = () => {
     const [garage, setGarage] = useState([])
     const [reviews, setReviews] = useState([])
     const [isFollowing, setIsFollowing] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        getPublicProfile(accountId)
-            .then((res) => {
-                setProfile(res.data)
-                setIsFollowing(res.data.followers?.includes(loggedUserId) ?? false)
-            })
-            .catch(console.error)
-        getPublicGarage(accountId).then((res) => setGarage(res.data)).catch(console.error)
-        listPublicReviews(accountId).then((res) => setReviews(res.data)).catch(console.error)
+        Promise.all([
+            getPublicProfile(accountId),
+            getPublicGarage(accountId),
+            listPublicReviews(accountId),
+        ]).then(([profileRes, garageRes, reviewsRes]) => {
+            setProfile(profileRes.data)
+            setIsFollowing(profileRes.data.followers?.includes(loggedUserId) ?? false)
+            setGarage(garageRes.data)
+            setReviews(reviewsRes.data)
+        })
+        .catch(console.error)
+        .finally(() => setIsLoading(false))
     }, [accountId, loggedUserId])
 
     const handleToggleFollow = () => {
@@ -36,7 +42,7 @@ const UserProfilePage = () => {
             .catch(() => toast.error("Could not update follow status"))
     }
 
-    if (!profile) return null
+    if (isLoading) return <ProfilePageSkeleton />
 
     const isOwnProfile = loggedUserId === accountId
 

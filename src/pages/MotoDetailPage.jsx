@@ -15,6 +15,7 @@ import ReviewList from "../components/reviews/ReviewList"
 import EditReviewModal from "../components/reviews/EditReviewModal"
 import WriteReviewModal from "../components/reviews/WriteReviewModal"
 import EditMotoModal from "../components/moto/EditMotoModal"
+import MotoDetailPageSkeleton from "./skeleton/MotoDetailPageSkeleton"
 
 const MotoDetailPage = () => {
     const { slug } = useParams()
@@ -26,6 +27,7 @@ const MotoDetailPage = () => {
     const [writeModalOpen, setWriteModalOpen] = useState(false)
     const [editMotoOpen, setEditMotoOpen] = useState(false)
     const [isFavorited, setIsFavorited] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         getMotoInfo(slug)
@@ -35,6 +37,7 @@ const MotoDetailPage = () => {
             })
             .then((res) => setReviews(res.data))
             .catch((err) => console.error(err))
+            .finally(() => setIsLoading(false))
     }, [slug])
 
     useEffect(() => {
@@ -91,7 +94,7 @@ const MotoDetailPage = () => {
             .catch(() => toast(`Could not add to garage`))
     }
 
-    if (!moto) return null
+    if (isLoading) return <MotoDetailPageSkeleton />
 
     return (
         <div>

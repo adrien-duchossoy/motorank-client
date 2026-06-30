@@ -5,6 +5,7 @@ import { addToFavorite, removeFavorite, myProfile } from "../services/user.confi
 import { AuthContext } from "../context/auth.context"
 import MotoSearch from "../components/MotoSearch"
 import MotoList from "../components/MotoList"
+import HomePageSkeleton from './skeleton/HomePageSkeleton'
 
 const HomePage = () => {
     const { isLoggedIn } = useContext(AuthContext)
@@ -13,6 +14,7 @@ const HomePage = () => {
     const [search, setSearch] = useState("")
     const [activeType, setActiveType] = useState("All")
     const [favorites, setFavorites] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         listAllMoto()
@@ -36,7 +38,10 @@ const HomePage = () => {
     useEffect(() => {
         if (!isLoggedIn) return
         myProfile()
-            .then((res) => setFavorites(new Set(res.data.favorites ?? [])))
+            .then((res) => {
+                setFavorites(new Set(res.data.favorites ?? []))
+                setIsLoading(false)
+            })
             .catch((err) => console.error(err))
     }, [isLoggedIn])
 
@@ -54,6 +59,8 @@ const HomePage = () => {
             })
             .catch(() => toast.error("Could not update favorites"))
     }
+
+    if(isLoading) return <HomePageSkeleton />
 
     return (
         <div className="px-4 md:px-16 lg:px-32 pt-6">

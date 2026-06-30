@@ -7,6 +7,7 @@ import { myProfile, getFollowers, getFollowing, followUser } from "../services/u
 import ProfileHeader from "../components/profile/ProfileHeader"
 import ProfileSheet from "../components/profile/ProfileSheet"
 import UserRow from "../components/profile/UserRow"
+import FollowListPageSkeleton from "./skeleton/FollowListPageSkeleton"
 
 const FollowListPage = ({ type }) => {
     const navigate = useNavigate()
@@ -14,17 +15,18 @@ const FollowListPage = ({ type }) => {
     const [users, setUsers] = useState([])
     const [followingIds, setFollowingIds] = useState(new Set())
     const [profileSheetOpen, setProfileSheetOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        myProfile()
-            .then((res) => {
-                setProfile(res.data)
-                setFollowingIds(new Set(res.data.following.map(String)))
+        const fetchList = type === "followers" ? getFollowers : getFollowing
+        Promise.all([myProfile(), fetchList()])
+            .then(([profileRes, listRes]) => {
+                setProfile(profileRes.data)
+                setFollowingIds(new Set(profileRes.data.following.map(String)))
+                setUsers(listRes.data)
             })
             .catch(console.error)
-
-        const fetchList = type === "followers" ? getFollowers : getFollowing
-        fetchList().then((res) => setUsers(res.data)).catch(console.error)
+            .finally(() => setIsLoading(false))
     }, [type])
 
     const handleFollow = (userId) => {
@@ -33,7 +35,7 @@ const FollowListPage = ({ type }) => {
             .catch(() => toast.error("Could not follow"))
     }
 
-    if (!profile) return null
+    if (isLoading) return <FollowListPageSkeleton />
 
     return (
         <>

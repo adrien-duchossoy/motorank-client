@@ -3,6 +3,7 @@ import { toast } from "sonner"
 import { listFavorites, addToFavorite, removeFavorite } from "../services/user.config"
 import MotoSearch from "../components/MotoSearch"
 import MotoList from "../components/MotoList"
+import SavedPageSkeleton from "./skeleton/SavedPageSkeleton"
 
 const SavedPage = () => {
     const [motos, setMotos] = useState([])
@@ -10,6 +11,7 @@ const SavedPage = () => {
     const [types, setTypes] = useState(["All"])
     const [search, setSearch] = useState("")
     const [activeType, setActiveType] = useState("All")
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
         listFavorites()
@@ -21,6 +23,7 @@ const SavedPage = () => {
                 setTypes(["All", ...unique])
             })
             .catch(console.error)
+            .finally(() => setIsLoading(false))
     }, [])
 
     const handleToggleFavorite = (motoId, modelName) => {
@@ -42,6 +45,8 @@ const SavedPage = () => {
             })
             .catch(() => toast.error("Could not update saved"))
     }
+
+    if (isLoading) return <SavedPageSkeleton />
 
     const filtered = motos.filter((m) => {
         const matchesType = activeType === "All" || m.type === activeType

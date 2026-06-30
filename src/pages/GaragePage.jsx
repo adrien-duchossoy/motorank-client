@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { myGarage, deleteFromMyGarage } from "../services/garage.config"
 import { getPublicProfile, getPublicGarage } from "../services/user.config"
 import GarageCard from "../components/profile/GarageCard"
+import GaragePageSkeleton from "./skeleton/GaragePageSkeleton"
 
 const GaragePage = () => {
     const { accountId } = useParams()
@@ -37,7 +38,7 @@ const GaragePage = () => {
             .catch(() => toast.error("Could not remove from garage"))
     }
 
-    if (loading) return null
+    if (loading) return <GaragePageSkeleton />
 
     const displayName = profile?.displayName || profile?.handle
     const title = isOwn ? "My Garage" : `${displayName}'s Garage`

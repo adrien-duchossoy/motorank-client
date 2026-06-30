@@ -9,6 +9,7 @@ import ProfileReviewCard from "../components/profile/ProfileReviewCard"
 import MotoCard from "../components/MotoCard"
 import EditReviewModal from "../components/reviews/EditReviewModal"
 import ProfileSheet from "../components/profile/ProfileSheet"
+import ProfilePageSkeleton from './skeleton/ProfilePageSkeleton'
 
 const MyProfilePage = () => {
     const [profile, setProfile] = useState(null)
@@ -17,12 +18,21 @@ const MyProfilePage = () => {
     const [favorites, setFavorites] = useState([])
     const [editingReview, setEditingReview] = useState(null)
     const [profileSheetOpen, setProfileSheetOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        myProfile().then((res) => setProfile(res.data)).catch(console.error)
-        myGarage().then((res) => setGarage(res.data)).catch(console.error)
-        myReviews().then((res) => setReviews(res.data)).catch(console.error)
-        listFavorites().then((res) => setFavorites(res.data)).catch(console.error)
+        Promise.all([
+            myProfile(),
+            myGarage(),
+            myReviews(),
+            listFavorites()
+        ]).then(([profileRes, garageRes, reviewsRes, favoritesRes]) => {
+            setProfile(profileRes.data)
+            setGarage(garageRes.data)
+            setReviews(reviewsRes.data)
+            setFavorites(favoritesRes.data)
+            setIsLoading(false)
+        }).catch(console.error)
     }, [])
 
     const handleDeleteGarage = (entryId) => {
@@ -45,7 +55,7 @@ const MyProfilePage = () => {
         ))
     }
 
-    if (!profile) return null
+    if (isLoading) return <ProfilePageSkeleton />
 
     const garageContent = garage.length === 0 ? (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">No bikes in your garage yet.</p>

@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from "react-router"
 import HomePage from "./pages/HomePage.jsx"
 import MotoDetailPage from "./pages/MotoDetailPage.jsx"
 import AuthPage from "./pages/auth/AuthPage.jsx"
-import PrivatePage from "./pages/PrivatePage.jsx"
 import MyProfilePage from "./pages/MyProfilePage.jsx"
 import UserProfilePage from "./pages/UserProfilePage.jsx"
 import FollowListPage from "./pages/FollowListPage.jsx"
@@ -29,14 +28,6 @@ function App() {
         <Route path='/user/:accountId/garage' element={<GaragePage />} />
         <Route path='/garage' element={<OnlyPrivate><GaragePage /></OnlyPrivate>} />
         <Route path='/saved' element={<OnlyPrivate><SavedPage /></OnlyPrivate>} />
-        <Route
-          path='/private-page-example'
-          element={
-            <OnlyPrivate>
-              <PrivatePage />
-            </OnlyPrivate>
-          }
-        />
       </Route>
 
       <Route element={<WithoutNavbar />}>
