@@ -71,10 +71,10 @@ const Signup = () => {
     const reqBody = { handle, email, password, displayName }
 
     signup(reqBody)
-      .then((res) => {
+      .then(async (res) => {
         localStorage.setItem("authToken", res.data.authToken)
-        authenticateUser()
-        navigate("/")
+        await authenticateUser()
+        navigate("/explore")
       })
       .catch((error) => {
         const errorDescription = error.response.data.errorMessage

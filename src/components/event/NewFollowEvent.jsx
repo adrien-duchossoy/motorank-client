@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { getPublicProfile } from '@/services/user.config'
 import { AuthContext } from '@/context/auth.context'
-import ProfilePic from '@/components/ui/ProfilePic'
+import ProfilePic from '@/components/profile/ProfilePic'
 
 const NewFollowEvent = ({event}) => {
 

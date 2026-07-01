@@ -41,11 +41,9 @@ const Login = () => {
     const reqBody = { login: loginInput, password }
 
     login(reqBody)
-      .then((res) => {
-        console.log("JWT token", res.data.authToken)
-
+      .then(async (res) => {
         localStorage.setItem("authToken", res.data.authToken)
-        authenticateUser()
+        await authenticateUser()
         navigate("/")
       })
       .catch((error) => {

@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { StarIcon, Edit01Icon, Delete01Icon } from "@hugeicons/core-free-icons"
-import ProfilePic from '@/components/ui/ProfilePic'
+import ProfilePic from '@/components/profile/ProfilePic'
 
 const ReviewCard = ({ review, loggedUserId, onEdit, onDelete }) => {
-    console.log(review.media) 
     const isOwn = review.userId._id === loggedUserId
 
     return (

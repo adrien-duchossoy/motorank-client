@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import ProfilePic from '@/components/ui/ProfilePic'
+import ProfilePic from '@/components/profile/ProfilePic'
 import { Progress } from '@/components/ui/progress'
 
 const ProfileHeader = ({ profile, reviewCount, action, followersPath, followingPath }) => {

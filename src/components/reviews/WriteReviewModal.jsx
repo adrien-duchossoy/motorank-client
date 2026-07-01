@@ -2,7 +2,7 @@ import { useState, useRef, useContext } from "react"
 import { createReview, myReviews } from "../../services/review.config"
 import { AuthContext } from "../../context/auth.context"
 import { uploadImage } from "../../services/upload.config"
-import VerifiedCelebration from "@/components/ui/VerifiedCelebration"
+import VerifiedCelebration from "@/components/reviews/VerifiedCelebration"
 import {
   Dialog,
   DialogContent,

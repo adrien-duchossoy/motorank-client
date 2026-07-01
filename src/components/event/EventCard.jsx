@@ -6,7 +6,7 @@ import NewFollowEvent from './NewFollowEvent'
 import GarageAddEvent from './GarageAddEvent'
 import EventLikes from './EventLikes'
 import EventComments from './EventComments'
-import ProfilePic from '@/components/ui/ProfilePic'
+import ProfilePic from '@/components/profile/ProfilePic'
 
 const timeAgo = (date) => {
     const seconds = Math.floor((Date.now() - new Date(date)) / 1000)

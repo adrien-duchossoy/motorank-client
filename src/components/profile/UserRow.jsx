@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom"
-import ProfilePic from '@/components/ui/ProfilePic'
+import ProfilePic from '@/components/profile/ProfilePic'
 
 const UserRow = ({ user, isFollowing, onFollow }) => {
     const navigate = useNavigate()

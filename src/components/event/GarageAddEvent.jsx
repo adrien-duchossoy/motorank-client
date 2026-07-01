@@ -12,7 +12,6 @@ const GarageAddEvent = ({ event }) => {
   useEffect(() => {
     getGarageEntry(event.referenceId)
       .then((res) => {
-        console.log(res.data)
         setEntry(res.data)
       })
       .catch(console.error)
