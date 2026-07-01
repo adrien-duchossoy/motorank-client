@@ -20,8 +20,8 @@ const Navbar = () => {
     const canAddBike = loggedUserRole === "verified" || loggedUserRole === "admin"
 
     const loggedInItems = [
-        { label: 'Feed',    icon: Home01Icon,     to: '/' },
-        { label: 'Explore', icon: Search01Icon,   to: '/explore' },
+        { label: 'Feed',    icon: Home01Icon,     to: '/feed' },
+        { label: 'Explore', icon: Search01Icon,   to: '/' },
         ...(canAddBike ? [{ label: 'New Bike', icon: Motorbike01Icon, to: '/new-bike' }] : []),
         { label: 'Garage',  icon: GarageIcon,     to: '/garage' },
         { label: 'Saved',   icon: BookmarkIcon,   to: '/saved' },

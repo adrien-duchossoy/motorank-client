@@ -1,5 +1,5 @@
 import "./App.css"
-import { Routes, Route, Navigate } from "react-router"
+import { Routes, Route } from "react-router"
 
 import HomePage from "./pages/HomePage.jsx"
 import MotoDetailPage from "./pages/MotoDetailPage.jsx"
@@ -20,8 +20,8 @@ function App() {
   return (
     <Routes>
       <Route element={<WithNavbar />}>
-        <Route path='/' element={<FeedPage />} />
-        <Route path='/explore' element={<HomePage />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='/feed' element={<FeedPage />} />
         <Route path='/moto/:slug' element={<MotoDetailPage />} />
         <Route path='/me' element={<OnlyPrivate><MyProfilePage /></OnlyPrivate>} />
         <Route path='/me/followers' element={<OnlyPrivate><FollowListPage type="followers" /></OnlyPrivate>} />

@@ -74,7 +74,7 @@ const Signup = () => {
       .then(async (res) => {
         localStorage.setItem("authToken", res.data.authToken)
         await authenticateUser()
-        navigate("/explore")
+        navigate("/")
       })
       .catch((error) => {
         const errorDescription = error.response.data.errorMessage

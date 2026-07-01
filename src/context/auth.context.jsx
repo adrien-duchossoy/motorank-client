@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { verifyLogin } from "../services/auth.config"
 import { myProfile } from "../services/user.config"
+import { Loader } from "../components/ui/loader"
 
 const AuthContext = createContext()
 
@@ -41,7 +42,7 @@ const AuthWrapper = ({ children }) => {
   useEffect(() => { authenticateUser() }, [])
 
   if (isAuthenticating) {
-    return <h3>... authenticating user</h3>
+    return <Loader />
   }
 
   return (
