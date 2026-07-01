@@ -32,17 +32,20 @@ const HomePage = () => {
         if (search) params.search = search
 
         listAllMoto(params)
-            .then((res) => setMotos(res.data))
-            .catch((err) => console.error(err))
+            .then((res) => {
+                setMotos(res.data)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.error(err)
+                setIsLoading(false)
+            })
     }, [search, activeType])
 
     useEffect(() => {
         if (!isLoggedIn) return
         myProfile()
-            .then((res) => {
-                setFavorites(new Set(res.data.favorites ?? []))
-                setIsLoading(false)
-            })
+            .then((res) => setFavorites(new Set(res.data.favorites ?? [])))
             .catch((err) => console.error(err))
     }, [isLoggedIn])
 
